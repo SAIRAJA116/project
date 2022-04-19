@@ -8,3 +8,4 @@ class UserAdminConfig(admin.ModelAdmin):
     search_fields = ('email','roll','name')
 
 admin.site.register(NewUser,UserAdminConfig)
+admin.site.register(Batch)

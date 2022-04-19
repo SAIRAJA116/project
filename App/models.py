@@ -6,6 +6,13 @@ from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUse
 from datetime import datetime
 from PIL import Image  
 
+
+class Batch(models.Model):
+    batchname = models.CharField(max_length=300)
+
+    def __str__(self):
+        return self.batchname
+
 # Create your models here.
 class CustomAccountManager(BaseUserManager):
     def create_user(self,email,roll,password,**other_fields):
@@ -44,7 +51,7 @@ class NewUser(AbstractBaseUser,PermissionsMixin):
     is_active = models.BooleanField(default=True)
     start_date = models.DateField(default=timezone.now)
     avatar = models.ImageField(upload_to=get_avataar_path, blank=True)
-
+    batch =  models.ForeignKey(Batch,on_delete=models.CASCADE,blank=True,null=True)
 
     objects = CustomAccountManager()
 
@@ -54,3 +61,8 @@ class NewUser(AbstractBaseUser,PermissionsMixin):
 
     def __str__(self):
         return self.email+"("+self.roll+")"
+
+
+    
+
+    
