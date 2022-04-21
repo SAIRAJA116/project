@@ -21,7 +21,7 @@ def loginPage(request):
         if(user is not None):
             login(request,user)
             if(user.isStudent == True):
-                return HttpResponse("Student")
+                return redirect("Student:dashboard")
             elif(user.isFaculty == True):
                 return HttpResponse("Faculty")
             elif(user.isAdmin == True):

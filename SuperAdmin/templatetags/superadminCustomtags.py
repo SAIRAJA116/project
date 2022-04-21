@@ -11,3 +11,4 @@ def getFaculty(course):
             return faculty[0]
       else:
             return None
+

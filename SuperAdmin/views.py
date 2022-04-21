@@ -1,14 +1,37 @@
+from typing import no_type_check
 from django.shortcuts import render,redirect
 import csv
 from django.contrib.auth.hashers import check_password,make_password
 from django.contrib import messages
 
 from App.models import NewUser,Batch
-from .models import Group,Course,FacultyDealsWith,Csv
+from .models import Group,Course,FacultyDealsWith,Csv, Quiz,Question,Answer
 # Create your views here.
 
 def dashboard(request):
-    return render(request,"SuperAdmin/dashboard.html")
+    
+    groups = Group.objects.all()
+    batch = Batch.objects.all()
+    draft_quizes = Quiz.objects.filter(post = False).order_by("-published")
+    quizes = Quiz.objects.filter(post = True).order_by("-published")
+
+    if(request.method=="POST"):
+        name=request.POST.get("quizname")
+        description = request.POST.get("description")
+        no_of_questions = request.POST.get("question_no")
+        time = request.POST.get("time")
+        group = request.POST.get("group")
+        batch = request.POST.get("batch")
+        try:
+            quiz = Quiz(name=name.rstrip(' '),description=description,no_of_questions=no_of_questions,time=time,group=Group.objects.get(id=group),batch=Batch.objects.get(id=batch),createdBy=request.user)
+            quiz.save()
+        except:
+            pass
+        
+        return redirect("SuperAdmin:dashboard")
+
+
+    return render(request,"SuperAdmin/dashboard.html",{"posted":quizes,"drafted":draft_quizes,"groups":groups,"batch":batch})
 
 
 def setup(request):
@@ -97,3 +120,59 @@ def customizeCourse(request):
         return redirect("SuperAdmin:customizeCourse")
     
     return render(request,"SuperAdmin/customizecourse.html",{"courses":courses,"groups":groups})
+
+def createQuiz(request,id):
+    quiz = Quiz.objects.get(id=id)
+    question_count = quiz.no_of_questions
+    if(request.method == "POST" or request.FILES):
+        if(quiz.drafted):
+            pass
+            i=1
+            for question in quiz.get_questions():
+                question_text = request.POST.get("question"+str(i))
+                question.question_text = question_text
+                question.save()
+                j=1
+                for answer in question.get_answers():
+                    answer_text = request.POST.get("answer"+str(j)+"-"+str(i))
+                    answer_crr  = request.POST.get("anscrr"+str(j)+"-"+str(i))
+                    answer.answer_text = answer_text
+                    if(answer_crr == "on"):
+                        answer.correct = True
+                    else:
+                        answer.correct = False
+                    answer.save()
+                    j+=1
+                i+=1
+        else:
+            for i in range(1,question_count+1):
+                pass
+                question_text = request.POST.get("question"+str(i))
+                question = Question(quiz = quiz,question_text=question_text)
+                question.save()
+                for j in range(1,5):
+                    pass
+                    answer_text = request.POST.get("answer"+str(j)+"-"+str(i))
+                    answer_crr  = request.POST.get("anscrr"+str(j)+"-"+str(i))
+                    if(answer_crr == "on"):
+                        answer = Answer(question=question,answer_text = answer_text,correct = True)
+                        answer.save()
+                    else:
+                        answer = Answer(question=question,answer_text = answer_text,correct = False)
+                        answer.save()
+            quiz.drafted = True
+            quiz.save()
+        
+        postorsave = request.POST.get("postorsave")
+        print(postorsave)
+        if(postorsave == "post"):
+            quiz.post = True
+            quiz.save()
+        return redirect("SuperAdmin:dashboard")
+        
+                
+                    
+            
+            
+
+    return render(request,"SuperAdmin/createQuiz.html",{"quiz":quiz})

@@ -19,8 +19,65 @@
       </nav>
     
       <div class="container">
-            
+            <center><button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createquiz">
+              Create Quiz
+            </button></center>
 
+            <!-- Modal -->
+            <div class="modal fade" id="createquiz" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                  <b>CreateQuiz</b>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
+                  <form method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                      <input class="form-control mb-2" name="quizname" type="text" name="form-control" placeholder="quizname" required />
+                      <textarea class="form-control mb-2" name="description" placeholder="description" ></textarea>
+                      <input class="form-control mb-2" name="question_no" type="number" placeholder="Enter no of questions" required />
+                      <input class="form-control mb-2" name="time" type="number" placeholder="Test duration in minites" required/>
+                      <select class="form-control mb-2" name="group" >
+                        <option selected disabled>Select Group</option>
+                        {% for i in groups %}
+                        <option value={{i.id}} >{{i.groupName}}</option>
+                        {% endfor %}
+                      </select>
+                      <select class="form-control mb-2" name="batch" required >
+                        <option selected disabled>Select Batch</option>
+                        {% for i in batch %}
+                        <option value={{i.id}} >{{i.batchname}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="Submit" class="btn btn-primary">Create Quiz</button>
+                    </div>
+                  </form>
+                  
+                  
+              </div>
+              </div>
+          </div>
+
+            <div class="quizlist">
+              <p><b>Drafted</b></p>
+              <ul class="mb-3">
+                {% for i in drafted %}
+                  <li><a href="{% url 'SuperAdmin:createQuiz' i.id %}"> {{i.name}} ({{i.group.groupName}}) </a></li>
+                {% endfor %}
+              </ul>
+              <p><b>Posted</b></p>
+              <ul class="mb-3">
+                {% for i in posted %}
+                <li><a href="#"> {{i.name}} ({{i.group.groupName}}) </a></li>
+                {% endfor %}
+              </ul>
+              
+            </div>
 
       </div>
 
