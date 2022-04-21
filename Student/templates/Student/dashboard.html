@@ -17,6 +17,20 @@
     </nav>
 
     <div class="container">
+
+        <div class="messages mt-3">
+            {% for i in messages %}
+            {% if i.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <div class="alert alert-danger" role="alert">
+              {{i}}
+            </div>
+            {% endif %}
+            {% if i.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <div class="alert alert-success" role="alert">{{i}}</div>
+            {% endif %}
+            {% endfor %}
+          </div>
+
         <b>List of Quizes</b>
         <hr/>
         
@@ -24,9 +38,12 @@
 
 
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#quizinfo{{forloop.counter}}">
-                {{quiz.name}}
-            </button>
+            <div class="mb-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#quizinfo{{forloop.counter}}">
+                    {{quiz.name}}
+                </button>
+            </div>
+            
   
             <!-- Modal -->
             <div class="modal fade" id="quizinfo{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
