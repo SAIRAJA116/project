@@ -35,7 +35,7 @@ EMAIL_HOST_USER = "bvcecexam@gmail.com"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = "bvcec@2022"
+EMAIL_HOST_PASSWORD = "Sairaja@9"
 ###############################
 
 # Application definition
