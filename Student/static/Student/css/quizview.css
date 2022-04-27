@@ -1,0 +1,32 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    color: #666666;
+    background: white;
+}
+
+.blue-to-orange-btn{
+    color:white;
+    background:#013873;
+}
+
+.blue-to-orange-btn:hover{
+    color:#013873;
+    background:white;
+    border-color:#013873;
+}
+
+.btnsubmit{
+    color:white;
+    background:orange;
+}
+
+.btnsubmit:hover{
+    color:orange;
+    background:white;
+    border-color:orange
+}

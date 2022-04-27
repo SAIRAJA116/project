@@ -1,4 +1,3 @@
-from tokenize import blank_re
 from django.db import models
 import os
 import random
@@ -35,8 +34,6 @@ def csv_path(instance):
 
 class Csv(models.Model):
     doc = models.FileField(upload_to="csv_path")
-    
-
 
     def delete(self,using=None,keep_parents=False):
         self.doc.storage.delete(self.doc.name)
@@ -86,18 +83,30 @@ def get_answer_imagepath(instance,image):
 
 
 class Answer(models.Model):
-    answer_text = models.TextField()
+    answer_text = models.CharField(max_length=1000)
     question = models.ForeignKey(Question,on_delete=models.CASCADE)
     correct = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.question.id)+" "+self.answer_text+" "+str(self.correct)
-    
+
+
+class QuizSeen(models.Model):
+    quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    student = models.ForeignKey(NewUser,on_delete=models.CASCADE)
+    seen = models.BooleanField(default=False)
+    seenon = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.quiz.name+"  "+self.student.name
     
 class Result(models.Model):
     quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE)
     student = models.ForeignKey(NewUser,on_delete=models.CASCADE)
     marks = models.IntegerField()
+    time = models.DateTimeField(auto_now_add =True,null=True)
 
     def __str__(self):
         return self.quiz.name+" "+self.student.name+" "+str(self.marks)
+
+    

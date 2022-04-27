@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -7,14 +8,27 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'SuperAdmin/css/setup.css' %}" />
+
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <style>
+      body {
+        font-family: 'Poppins';
+      }
+    </style>
+
 
     <title>SuperAdmin</title>
   </head>
   <body>
 
-      <nav class="navbar navbar-light bg-light mb-2">
-            <span class="navbar-brand mb-0 h1 text-decoration-none"><a href=" {% url 'SuperAdmin:dashboard' %} ">Navbar</a></span>
-            <span class="mr-auto text-decoration-none"><a href="{% url 'SuperAdmin:customizeCourse' %}">Courses</a></span>
+      <nav class="navbar  mb-4">
+            <span  class="navbar-brand mb-0 h1"><a style="color:orange" class="text-decoration-none" href=" {% url 'SuperAdmin:dashboard' %} ">BVC</a></span>
+            <span class="mr-auto "><a class="text-decoration-none custom-nav-items"   href="{% url 'SuperAdmin:customizeCourse' %}">Courses</a></span>
+            <span class="mr-2" ><a class="text-decoration-none custom-nav-items"  href="{% url 'SuperAdmin:myAccount' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+              <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+            </svg></a></span>
       </nav>
 
       <div class="messages mt-3">
@@ -31,13 +45,25 @@
       </div>
     
       <div class="container">
-            
+        
         <div class="row">
           <div class="col-lg-3"></div>
           <div class="col-lg-6">
+            <div class="card ">
+              <div class="card-header">
+                <b>Warning</b>
+              </div>
+              <div class="card-body">
+                <p style="font-size: 12px; color:rgb(106, 106, 119)">Upload the csv file with carefully the format of the csv need to be same as give between the rows can not be altered . altering the rows will result in genrating errors</p>
+                <div class="d-flex justify-content-center align-items-center">
+                  <img src="{% static 'SuperAdmin/images/sample_csv.png' %}" style="width: 80%;" >
+                </div>
+              </div>
+              
+            </div>
             <div class="card mt-3">
               <div class="card-header">
-                <b>SetUp!</b>
+                <b style="color:#013873">SetUp!</b>
               </div>
               <div class="card-body">
                 <span style="font-size: 12px; color:rgb(106, 106, 119)">You can register all the students of the club in a single go
@@ -48,14 +74,14 @@
                       {% csrf_token %}
                       <input name="add-by-csv" hidden />
                       <input type="file" name="doc" id="file" onchange="fileValidation()" required />
-                      <button class="btn btn-success" type="submit">Submit</button>
+                      <button class="btn btn-sm blue-to-orange-btn" type="submit">Submit</button>
                     </form>
                   </div>     
               </div>
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                <b>Add Student</b>
+                <b style="color:#013873">Add Student</b>
               </div>
               <div class="card-body">
                 <span style="font-size: 12px; color:rgb(106, 106, 119)">You can add individual student here.</span>
@@ -68,23 +94,23 @@
                       <input name="addstudent" hidden />
                       <div class="form-group col-md-6">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <input type="text" class="form-control form-input" id="name" name="name" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="lastname">Mobile</label>
-                        <input type="text" class="form-control" id="mobile" name="mobile" >
+                        <input type="text" class="form-control form-input" id="mobile" name="mobile" >
                       </div>
                       <div class="form-group col-md-6">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control form-input" id="email" name="email" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="roll">Roll</label>
-                        <input type="text" class="form-control" id="roll" name="roll" required>
+                        <input type="text" class="form-control form-input" id="roll" name="roll" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="batch">Batch</label>
-                        <select class="form-control" id="batch" name="batch">
+                        <select class="form-control form-input" id="batch" name="batch">
                           <option disabled selected>---</option>
                           {% for i in batch %}
                             <option value={{i.id}}>{{i.batchname}}</option>
@@ -94,15 +120,16 @@
                       
                       
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary">Add Student</button>
+                    <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-sm blue-to-orange-btn">Add Student</button>
+                    </div>
                   </form>
                 </div>
               </div>
             </div>
             <div class="card mt-3">
               <div class="card-header">
-                <b>Add Faculty</b>
+                <b style="color:#013873">Add Faculty</b>
               </div>
               <div class="card-body">
                 <span style="font-size: 12px; color:rgb(106, 106, 119)">You can and individual Faculty here.</span>
@@ -115,23 +142,24 @@
                       <input name="addfaculty" hidden />
                       <div class="form-group col-md-6">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
+                        <input type="text" class="form-control form-input" id="name" name="name" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="lastname">Mobile</label>
-                        <input type="text" class="form-control" id="mobile" name="mobile" >
+                        <input type="text" class="form-control form-input" id="mobile" name="mobile" >
                       </div>
                       <div class="form-group col-md-6">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
+                        <input type="email" class="form-control form-input" id="email" name="email" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="roll">Roll</label>
-                        <input type="text" class="form-control" id="roll" name="roll" required>
+                        <input type="text" class="form-control form-input" id="roll" name="roll" required>
                       </div>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary">Add Faculty</button>
+                    <div class="d-flex justify-content-center">
+                      <button type="submit" class="btn btn-sm blue-to-orange-btn">Add Faculty</button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -142,7 +170,8 @@
 
       </div>
 
-      <button type="button" id="fac-or-stu" class="btn"><Span id="facstu-text">Faculty</button>
+
+      <button type="button" id="fac-or-stu" class="btn btn-secondary btn-sm m-4"><Span id="facstu-text">Click to see the faculty</button>
 
       <center>
         <div class="container-fluid mt-2" id="student_table">
@@ -186,8 +215,8 @@
                         <p style="color:grey">Are you sure you want to delete this user</p>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-success"><a href="#"
-                            class="text-decoration-none text-light">Yes</a></button>
+                        <button type="button" class="btn btn-success"><a href="{% url 'SuperAdmin:deleteuser' user.id %}"
+                            class="text-decoration-none text-light ">Yes</a></button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
     
                       </div>
@@ -242,7 +271,7 @@
                         <p style="color:grey">Are you sure you want to delete this user</p>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-success"><a href="#"
+                        <button type="button" class="btn btn-success"><a href="{% url 'SuperAdmin:deleteuser' user.id %}"
                             class="text-decoration-none text-light">Yes</a></button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
     
@@ -285,12 +314,12 @@
           var stu_table = document.getElementById("student_table")
           var fac_table = document.getElementById("faculty_table")
           if(btn_value){
-            btn.innerHTML = "Student"
+            btn.innerHTML = "Click to see the Students"
             stu_table.style.display="none";
             fac_table.style.display="block";
             btn_value=false
           }else{
-            btn.innerHTML = "Faculty"
+            btn.innerHTML = "Click to see the Faculty"
             stu_table.style.display="block";
             fac_table.style.display="none";
             btn_value=true;

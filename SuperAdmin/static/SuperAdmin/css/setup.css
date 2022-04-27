@@ -1,0 +1,39 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    color: #666666;
+    /* background: #eaeff4; */
+    background: white;
+  }
+
+
+.navbar{
+    box-shadow: 0px 0px 10px 0px #01387391;
+}
+
+.custom-nav-items{
+    color:rgb(116, 116, 116);
+}
+
+.custom-nav-items:hover{
+    color:orange;
+}
+
+.blue-to-orange-btn{
+    color:white;
+    background:#013873;
+}
+
+.blue-to-orange-btn:hover{
+    color:orange;
+    background:white;
+    border-color:orange;
+}
+
+.form-input:hover{  
+    border-color:orange;
+}

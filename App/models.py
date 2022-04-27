@@ -62,7 +62,8 @@ class NewUser(AbstractBaseUser,PermissionsMixin):
     def __str__(self):
         return self.email+"("+self.roll+")"
 
-
+class OTPContainer(models.Model):
+    otp = models.CharField(max_length=10)
     
 
     

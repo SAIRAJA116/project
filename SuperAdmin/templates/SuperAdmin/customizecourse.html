@@ -1,5 +1,5 @@
 {% load superadminCustomtags %}
-
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,15 +9,29 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'SuperAdmin/css/customizecourse.css' %}" />
 
+
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <style>
+      body {
+        font-family: 'Poppins';
+      }
+    </style>
+    
     <title>Customize Courses</title>
   </head>
   <body>
 
-      <nav class="navbar navbar-light bg-light mb-2">
-            <span class="navbar-brand mb-0 h1"><a href="{% url 'SuperAdmin:dashboard' %}">Navbar</a></span>
-            <span class="mr-auto"><a href="{% url 'SuperAdmin:setup' %}">Setup</a></span>
-      </nav>
+    <nav class="navbar  mb-4">
+        <span  class="navbar-brand mb-0 h1"><a style="color:orange" class="text-decoration-none" href="{% url 'SuperAdmin:dashboard' %}">BVC</a></span>
+        <span class="mr-auto "><a class="text-decoration-none custom-nav-items"   href="{% url 'SuperAdmin:setup' %}">Setup</a></span>
+        <span class="mr-2" ><a class="text-decoration-none custom-nav-items"  href="{% url 'SuperAdmin:myAccount' %}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+          <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+        </svg></a></span>
+    </nav>
+
+
     
       <div class="container">
             <div class="row">
@@ -27,7 +41,7 @@
 
                     <div class="card">
                         <div class="card-header d-flex alignitemsceter justify-content-center">
-                            <b>Add Course</b>
+                            <b style="color: #013873 ">Add Course</b>
                         </div>
                         <form method="POST">
                             {% csrf_token %}
@@ -46,7 +60,7 @@
                                     </div>
                             </div>
                             <div class="card-footer d-flex align-items-center justify-content-center">
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" class="btn btn-sm blue-to-orange-btn">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -80,11 +94,11 @@
                               {% if f %}
                               <p class="card-text">Deals by : {{f.faculty.name}} </p>
                               <center>
-                              <button class="btn btn-primary btn-sm" data-toggle="modal"
+                              <button class="btn btn-sm blue-to-orange-btn" data-toggle="modal"
                                   data-target="#staticBackdrop{{course.id}}">Customise</button></center>
                               {% else %}
                               <center>
-                              <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#staticBackdrop1{{course.id}}">Add
+                              <button class="btn  btn-sm blue-to-orange-btn" data-toggle="modal" data-target="#staticBackdrop1{{course.id}}">Add
                                   Faculty</button></center>
                               {% endif %}
                           </div>
@@ -118,7 +132,7 @@
                                             <input id="roll" class="form-control" type="text" placeholder={{f.faculty.roll}} name="roll" required>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-warning" type="submit">Update</button>
+                                            <button class="btn btn-sm blue-to-orange-btn" type="submit">Update</button>
                                         </div>
                                     </form>
                                 </div>
@@ -148,7 +162,7 @@
                                             <input id="roll" class="form-control" type="text" placeholder="Ex:501" name="roll" required>
                                         </div>
                                         <div class="modal-footer">
-                                            <button class="btn btn-success" type="submit">Add</button>
+                                            <button class="btn btn-success blue-to-orange-btn" type="submit">Add</button>
                                         </div>
                                     </form>
                                 </div>

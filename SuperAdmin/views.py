@@ -1,11 +1,13 @@
-from typing import no_type_check
 from django.shortcuts import render,redirect
 import csv
 from django.contrib.auth.hashers import check_password,make_password
 from django.contrib import messages
+from django.contrib.auth import authenticate,login,logout
+from django.http import HttpResponse
+
 
 from App.models import NewUser,Batch
-from .models import Group,Course,FacultyDealsWith,Csv, Quiz,Question,Answer
+from .models import Group,Course,FacultyDealsWith,Csv, Quiz,Question,Answer,Result,QuizSeen
 # Create your views here.
 
 def dashboard(request):
@@ -36,8 +38,8 @@ def dashboard(request):
 
 def setup(request):
     groups = Group.objects.all()
-    students = NewUser.objects.filter(isStudent=True)
-    faculty =  NewUser.objects.filter(isFaculty=True)
+    students = NewUser.objects.filter(isStudent=True).order_by("roll")
+    faculty =  NewUser.objects.filter(isFaculty=True).order_by("roll")
     batch = Batch.objects.all()
 
     if(request.method == "POST"):
@@ -87,10 +89,19 @@ def setup(request):
                 messages.success(request,"Faculty with email "+email+" have been added.")
             except:
                 messages.error(request,"Error occured while adding the Faculty with email "+email+" .")
-
-
-            
+        
     return render(request,"SuperAdmin/setup.html",{"groups":groups,"students":students,"batch":batch,"faculty":faculty})
+
+
+def deleteuser(request,id):
+    try:
+        user = NewUser.objects.get(id=id)
+        user.delete()
+        messages.error(request,"User deleted")
+    except:
+        pass
+        print("erroroccured")
+    return redirect("SuperAdmin:setup")
 
 def customizeCourse(request):
     courses = Course.objects.all()
@@ -135,6 +146,7 @@ def createQuiz(request,id):
                 j=1
                 for answer in question.get_answers():
                     answer_text = request.POST.get("answer"+str(j)+"-"+str(i))
+                    print(answer_text)
                     answer_crr  = request.POST.get("anscrr"+str(j)+"-"+str(i))
                     answer.answer_text = answer_text
                     if(answer_crr == "on"):
@@ -153,6 +165,7 @@ def createQuiz(request,id):
                 for j in range(1,5):
                     pass
                     answer_text = request.POST.get("answer"+str(j)+"-"+str(i))
+                    
                     answer_crr  = request.POST.get("anscrr"+str(j)+"-"+str(i))
                     if(answer_crr == "on"):
                         answer = Answer(question=question,answer_text = answer_text,correct = True)
@@ -168,11 +181,97 @@ def createQuiz(request,id):
         if(postorsave == "post"):
             quiz.post = True
             quiz.save()
-        return redirect("SuperAdmin:dashboard")
-        
-                
-                    
-            
+        return redirect("SuperAdmin:dashboard")   
             
 
     return render(request,"SuperAdmin/createQuiz.html",{"quiz":quiz})
+
+
+
+def quizresult(request,id):
+    quiz = Quiz.objects.get(id=id)
+    students = NewUser.objects.filter(batch=quiz.batch)
+    results = Result.objects.filter(quiz=quiz)
+    total = len(students)
+    completed = len(results)
+    notcompleted = total - completed
+
+    return render(request,"SuperAdmin/quizresult.html",{"quiz":quiz,"results":results,"total":total,"completed":completed,"notcompleted":notcompleted,"students":students})
+
+
+def myAccount(request):
+    user = request.user
+    if(request.method=="POST" or request.FILES):
+        pass
+        if("name" in request.POST):
+            name = request.POST.get('name')
+            user.name = name
+            user.save()
+        elif("resetpassword" in request.POST):
+            oldpassword = request.POST.get("oldpassword")
+            newpassword = request.POST.get("newpassword")
+            if(check_password(oldpassword,user.password)):
+                user.password=make_password(newpassword)
+                user.save()
+                logout(request)
+                return redirect("App:loginPage")
+        elif('changeimage' in request.POST):
+            avatar = request.FILES.get("avatar")
+            user.avatar = avatar
+            user.save()
+        return redirect("SuperAdmin:myAccount")
+    return render(request,"SuperAdmin/myAccount.html",{"user":user})
+
+
+
+def deleteavatar(request):
+    pass
+    user = request.user
+    user.avatar = None
+    user.save()
+    return redirect("SuperAdmin:myAccount") 
+
+
+
+
+def getMarks(student_id,quiz_id):
+      quiz = Quiz.objects.get(id=quiz_id)
+      student = NewUser.objects.get(id=student_id)
+      result = Result.objects.filter(quiz=quiz,student = student)
+      if(len(result)==0):
+            quizseen = QuizSeen.objects.filter(quiz=quiz,student = student)
+            if(len(quizseen)==0):
+                  return None
+            else:
+                  return "Malpracticed"
+      return result[0].marks
+
+
+def export_csv(request,id):
+    quiz = Quiz.objects.get(id=id)
+    students = NewUser.objects.filter(batch = quiz.batch ).order_by('roll')
+    results = Result.objects.filter(quiz=quiz).order_by('student__roll')
+    print(students)
+    print(results)
+
+    response = HttpResponse(content_type = "text/csv")
+    response['Content-Desposition'] = 'attachment; filename="quizReport.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['','QuizName','',quiz.name])
+    for i in range(2):
+        writer.writerow(['','','',''])
+    writer.writerow(['','Publish Time','',quiz.published.strftime("%Y-%m-%d %I:%M %p")])
+    for i in range(2):
+        writer.writerow([''])
+    writer.writerow(['S.NO','ROLL','NAME','MARKS'])
+    i=1
+    for student in students:
+        marks = getMarks(student.id,quiz.id)
+        if(marks):
+            writer.writerow([i,str(student.roll),student.name,marks])
+        else:
+            writer.writerow([i,str(student.roll),student.name,'not answered'])
+        i+=1
+    response['Content-Disposition'] = 'attachment; filename='+quiz.name+'.csv'
+    return response 

@@ -1,0 +1,39 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    color: #666666;
+    background: white;
+  }
+
+
+.navbar{
+    box-shadow: 0px 0px 10px 0px #01387391;
+}
+
+.custom-nav-items{
+    color:rgb(116, 116, 116);
+}
+
+.custom-nav-items:hover{
+    color:orange;
+}
+
+.quizbtn{
+    color:white;
+    background:orange;
+}
+
+.quizbtn:hover{
+    color:orange;
+    background:white;
+    border-color:orange;
+}
+
+.table-header{
+    background: orange;
+    color: #013873;
+}
