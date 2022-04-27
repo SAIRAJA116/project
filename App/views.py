@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password,check_password
 import random
+from django.contrib.auth.decorators import login_required
 
 
 #dependies required for HTML email

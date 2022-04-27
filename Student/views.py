@@ -1,11 +1,14 @@
 from django.shortcuts import render,redirect
 from SuperAdmin.models import *
-from django.contrib import messages
 from django.contrib.auth.hashers import check_password,make_password
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+
+
 
 # Create your views here.
+@login_required(login_url="App:loginPage")
 def dashboard(request):
     user = request.user
     quizes = Quiz.objects.filter(batch = user.batch,post=True)
@@ -39,6 +42,7 @@ def dashboard(request):
     return render(request,"Student/dashboard.html",{"quizes":not_answered,"user":user,"results":results,"malpractised":malpractised})
 
 
+@login_required(login_url="App:loginPage")
 def quizview(request,id):
     quiz = Quiz.objects.get(id = id)
     quizseen = QuizSeen(quiz=quiz,student=request.user,seen=True)
@@ -61,6 +65,7 @@ def quizview(request,id):
 
     return render(request,"Student/quizview.html",{"quiz":quiz})
 
+@login_required(login_url="App:loginPage")
 def myAccount(request):
     user = request.user
     if(request.method=="POST" or request.FILES):
@@ -85,7 +90,7 @@ def myAccount(request):
     return render(request,"Student/myAccount.html",{"user":user})
 
 
-
+@login_required(login_url="App:loginPage")
 def deleteavatar(request):
     pass
     user = request.user

@@ -4,12 +4,14 @@ from django.contrib.auth.hashers import check_password,make_password
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 
 from App.models import NewUser,Batch
 from .models import Group,Course,FacultyDealsWith,Csv, Quiz,Question,Answer,Result,QuizSeen
 # Create your views here.
 
+@login_required(login_url="App:loginPage")
 def dashboard(request):
     
     groups = Group.objects.all()
@@ -36,6 +38,7 @@ def dashboard(request):
     return render(request,"SuperAdmin/dashboard.html",{"posted":quizes,"drafted":draft_quizes,"groups":groups,"batch":batch})
 
 
+@login_required(login_url="App:loginPage")
 def setup(request):
     groups = Group.objects.all()
     students = NewUser.objects.filter(isStudent=True).order_by("roll")
@@ -93,6 +96,7 @@ def setup(request):
     return render(request,"SuperAdmin/setup.html",{"groups":groups,"students":students,"batch":batch,"faculty":faculty})
 
 
+@login_required(login_url="App:loginPage")
 def deleteuser(request,id):
     try:
         user = NewUser.objects.get(id=id)
@@ -103,6 +107,7 @@ def deleteuser(request,id):
         print("erroroccured")
     return redirect("SuperAdmin:setup")
 
+@login_required(login_url="App:loginPage")
 def customizeCourse(request):
     courses = Course.objects.all()
     groups = Group.objects.all()
@@ -132,6 +137,7 @@ def customizeCourse(request):
     
     return render(request,"SuperAdmin/customizecourse.html",{"courses":courses,"groups":groups})
 
+@login_required(login_url="App:loginPage")
 def createQuiz(request,id):
     quiz = Quiz.objects.get(id=id)
     question_count = quiz.no_of_questions
@@ -187,7 +193,7 @@ def createQuiz(request,id):
     return render(request,"SuperAdmin/createQuiz.html",{"quiz":quiz})
 
 
-
+@login_required(login_url="App:loginPage")
 def quizresult(request,id):
     quiz = Quiz.objects.get(id=id)
     students = NewUser.objects.filter(batch=quiz.batch)
@@ -199,6 +205,7 @@ def quizresult(request,id):
     return render(request,"SuperAdmin/quizresult.html",{"quiz":quiz,"results":results,"total":total,"completed":completed,"notcompleted":notcompleted,"students":students})
 
 
+@login_required(login_url="App:loginPage")
 def myAccount(request):
     user = request.user
     if(request.method=="POST" or request.FILES):
@@ -223,7 +230,7 @@ def myAccount(request):
     return render(request,"SuperAdmin/myAccount.html",{"user":user})
 
 
-
+@login_required(login_url="App:loginPage")
 def deleteavatar(request):
     pass
     user = request.user
@@ -246,7 +253,7 @@ def getMarks(student_id,quiz_id):
                   return "Malpracticed"
       return result[0].marks
 
-
+@login_required(login_url="App:loginPage")
 def export_csv(request,id):
     quiz = Quiz.objects.get(id=id)
     students = NewUser.objects.filter(batch = quiz.batch ).order_by('roll')

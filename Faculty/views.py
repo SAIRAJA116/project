@@ -4,12 +4,15 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.hashers import check_password,make_password
 import csv
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 from App.models import *
 from SuperAdmin.models import *
 
 
+@login_required(login_url="App:loginPage")
 def dashboard(request):
     user = request.user
     courses = FacultyDealsWith.objects.filter(faculty=user)
@@ -36,7 +39,7 @@ def dashboard(request):
     return render(request,"Faculty/dashboard.html",{"posted":quizes,"drafted":draft_quizes,"courses":courses,"batch":batch})
 
 
-
+@login_required(login_url="App:loginPage")
 def createQuiz(request,id):
     try:
         quiz = Quiz.objects.get(id=id,createdBy = request.user)
@@ -93,6 +96,7 @@ def createQuiz(request,id):
     return render(request,"Faculty/createQuiz.html",{"quiz":quiz})
 
 
+@login_required(login_url="App:loginPage")
 def quizresult(request,id):
     try:
         quiz = Quiz.objects.get(id=id,createdBy=request.user)
@@ -107,6 +111,7 @@ def quizresult(request,id):
         return redirect("Faculty:dashboard")
 
 
+@login_required(login_url="App:loginPage")
 def myAccount(request):
     user = request.user
     if(request.method=="POST" or request.FILES):
@@ -131,7 +136,7 @@ def myAccount(request):
     return render(request,"Faculty/myAccount.html",{"user":user})
 
 
-
+@login_required(login_url="App:loginPage")
 def deleteavatar(request):
     pass
     user = request.user
@@ -154,6 +159,7 @@ def getMarks(student_id,quiz_id):
     return result[0].marks
 
 
+@login_required(login_url="App:loginPage")
 def export_csv(request,id):
     quiz = Quiz.objects.get(id=id)
     students = NewUser.objects.filter(batch = quiz.batch ).order_by('roll')
